@@ -4,7 +4,7 @@ library(e1071)
 
 #Predict the gladysvale fossil teeth using overall means  
 
-setwd("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF")
+setwd("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/")
 gladysvale_metadata <- read.csv("./data/Gladysvale_Med_Alcels_Greg.csv", header = FALSE)[,1:3]
 names(gladysvale_metadata) <- c("image","type","broken")
 gladysvale_metadata$I_broken <- 0

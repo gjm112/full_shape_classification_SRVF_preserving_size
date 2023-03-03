@@ -3,7 +3,7 @@ teethBWgladysvale500matrix = readtable("/Users/gregorymatthews/Dropbox/gladysval
 teethBWgladysvale500matrix = renamevars(teethBWgladysvale500matrix,["Var1"],["image"])
 
 
-cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/code/matlab/
+cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab/
 %get the number of rows and cols
 n_rows = size(teethBWgladysvale500matrix,1);
 n_cols = size(teethBWgladysvale500matrix,2);
@@ -29,7 +29,7 @@ end
 % get image ids in order 
 teeth_ref_gladysvale = teethBWgladysvale500matrix.image(1:2:n_rows);
 
-cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/data/fulldata
+cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/fulldata
  % Write the table to a CSV file
 writetable(cell2table(teeth_ref_gladysvale),strcat("gladysvale_reference.csv"))
     
@@ -39,7 +39,7 @@ teeth_data_gladysvale = teeth_data
 
 
 % save the teeth_data and teeth_ref in one .dat file
-cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/data/
+cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/
 save('teeth_data_gladysvale')
 save('teeth_ref_gladysvale')
 
@@ -51,17 +51,20 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
     %teeth = teeth_data(:,:,teeth_ref.type == toothtype);
     teeth = teeth_data_gladysvale
     %ref = teeth_ref(teeth_ref.type==toothtype,:);
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/data/means
+    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/means
     load(strcat("mean_",toothtype,"_overall"))
     
     %FindTangentFeatures(mu,q,numPCs)
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/code/matlab
+    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
     sz = size(teeth)
-
-    [VV,PC] = FindTangentFeatures(mean,teeth,min(sz(3) - 1,30))
+        q = teeth
+        for j=1:sz(3)
+         q(:,:,j) = curve_to_q(teeth(:,:,j));
+         end
+    [VV,PC] = FindTangentFeatures(mean,q,min(sz(3) - 1,30))
     %csvwrite(filename,M) writes matrix M to file filename as comma-separated values.
     
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/data/fulldata/
+    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/fulldata/
     
     csvwrite(strcat(toothtype,"_gladysvale_overall.csv"), VV)
     %PCs won't really mean anything here, right? 
@@ -75,14 +78,17 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
         disp(i)
         teeth = teeth_data_gladysvale
 
-        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/data/means
+        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/means
         load(strcat("mean_",toothtype,"_",tribe))
     
         %FindTangentFeatures(mu,q,numPCs)
-        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/code/matlab
+        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
         sz = size(teeth)
-
-        [VV,PC] = FindTangentFeatures(mean,teeth,min(sz(3) - 1,30))
+            q = teeth
+        for j=1:sz(3)
+         q(:,:,j) = curve_to_q(teeth(:,:,j));
+         end
+        [VV,PC] = FindTangentFeatures(mean,q,min(sz(3) - 1,30))
         
         out_all(:,:,i) = VV
         %out_pc(:,:,i) = PC
@@ -97,7 +103,7 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
         out_all(:,:,6), ...
         out_all(:,:,7))
 
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/data/fulldata 
+    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/fulldata 
     csvwrite(strcat(toothtype,"_gladysvale_individual.csv"), gladysvale_individual)
     
 
