@@ -44,7 +44,7 @@ for iter =1:Niter
         vm = vm + v;
     end
        %average of the vectors in the tangent space
-       vm = vm/n;
+       mu1 = vm/n;
        %this is the Forbenious norm of the sum of the v's 
        %this is the discrepency between the point we want to reach and the
        %point we want to shoot to
