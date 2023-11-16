@@ -53,9 +53,10 @@ file_list_BW_extant <- list.files(path, recursive = TRUE, full.names = TRUE)
 start <- Sys.time()
 import_BW <- function(x){import_jpg(x)[[1]]}
 teeth_BW_gladysvale <- lapply(as.list(file_list_BW_extant), import_BW)
-names(teeth_BW_gladysvale) <- substring(file_list_BW_extant, unlist(gregexpr( "GV",file_list_BW_extant)) , unlist(gregexpr( "JPEG|jpeg",file_list_BW_extant)) -2)
+names(teeth_BW_gladysvale) <- substring(file_list_BW_extant, unlist(gregexpr( "GV",file_list_BW_extant)) , unlist(gregexpr( "JPEG|jpeg|jpg",file_list_BW_extant)) -2)
 end <- Sys.time()
 end - start
+
 
 
 save(teeth_BW_gladysvale, file = "/Users/gregorymatthews/Dropbox/gladysvale/RData/teeth_BW_gladysvale_medalcels.RData")
