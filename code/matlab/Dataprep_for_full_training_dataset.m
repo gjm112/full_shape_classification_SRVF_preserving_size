@@ -1,12 +1,12 @@
 %this script with format the update teeth data into the form we would like 
-cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
+cd ./full_shape_classification_SRVF_preserving_size/code/matlab
 
 %Two files with data:
-teethBWtrain500matrix20210622 = readtable("/Users/gregorymatthews/Dropbox/gladysvale/teeth_BW_train_500_matrix_20210622.csv")
+teethBWtrain500matrix20210622 = readtable("./data/teeth_BW_train_500_matrix_20210622.csv")
 teethBWtrain500matrix20210622 = renamevars(teethBWtrain500matrix20210622,["Var1"],["image"])
 
 
-referencefile20210622 = readtable("/Users/gregorymatthews/Dropbox/gladysvale/reference_file_20210622.csv")
+referencefile20210622 = readtable("./data/reference_file_20210622.csv")
 
 %teethBWtrain500matrix20210622 is a file with 7070
 %rows and 501 columns. The first column is the image number and the other
@@ -82,12 +82,12 @@ teeth_ref = teeth_ref(order,:);
 
 teeth_data_size_and_shape = teeth_data
 % save the teeth_data and teeth_ref in one .dat file
-cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data
+cd ./full_shape_classification_SRVF_preserving_size/data
 save('teeth_data_20210622_size_and_shape.mat')
 save('teeth_data_size_and_shape')
 
 
-cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
+cd ./full_shape_classification_SRVF_preserving_size/code/matlab
 teeth_ref.type = string(teeth_ref.type)
 
 %start with LM1
@@ -100,11 +100,11 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
     
     %compute the overall mean
     %remember to run  mex DynamicProgrammingQ.c before finding the mean
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
+    cd ./full_shape_classification_SRVF_preserving_size/code/matlab
     mean = FindElasticMean(teeth);
     
     %Save data here
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/means
+    cd ./full_shape_classification_SRVF_preserving_size/data/means
     %Filename first then the object
     save(strcat("mean_",toothtype,"_overall"),"mean")
 
@@ -114,11 +114,11 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
     
         %compute the overall mean
         %remember to run  mex DynamicProgrammingQ.c before finding the mean
-        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
+        cd ./full_shape_classification_SRVF_preserving_size/code/matlab
         mean = FindElasticMean(teeth);
     
         %Save data here
-        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/means
+        cd ./full_shape_classification_SRVF_preserving_size/data/means
         %Filename first then the object
         save(strcat("mean_",toothtype,"_",tribe),"mean")
     end
@@ -129,11 +129,11 @@ end
 for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
     teeth = teeth_data(:,:,teeth_ref.type == toothtype);
     ref = teeth_ref(teeth_ref.type==toothtype,:);
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/means
+    cd ./full_shape_classification_SRVF_preserving_size/data/means
     load(strcat("mean_",toothtype,"_overall"))
     
     %FindTangentFeatures(mu,q,numPCs)
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
+    cd /full_shape_classification_SRVF_preserving_size/code/matlab
     sz = size(teeth)
     q = teeth
     for j=1:sz(3)
@@ -142,7 +142,7 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
     [VV,PC] = FindTangentFeatures(mean,q,min(sz(3) - 1,30))
     %csvwrite(filename,M) writes matrix M to file filename as comma-separated values.
     
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/fulldata/
+    cd ./full_shape_classification_SRVF_preserving_size/data/fulldata/
     writetable(ref, strcat(toothtype,"_train_reference.csv"))
     csvwrite(strcat(toothtype,"_train_overall.csv"), VV)
     csvwrite(strcat(toothtype,"_train_overall_PC.csv"), PC)
@@ -156,11 +156,11 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
         teeth = teeth_data(:,:,teeth_ref.type == toothtype);
         ref = teeth_ref(teeth_ref.type == toothtype ,:);
 
-        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/means
+        cd ./full_shape_classification_SRVF_preserving_size/data/means
         load(strcat("mean_",toothtype,"_",tribe))
     
         %FindTangentFeatures(mu,q,numPCs)
-        cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/code/matlab
+        cd ./full_shape_classification_SRVF_preserving_size/code/matlab
         sz = size(teeth)
         q = teeth
         for j=1:sz(3)
@@ -181,7 +181,7 @@ for toothtype = ["LM1","LM2","LM3","UM1","UM2","UM3"]
         out_all(:,:,6), ...
         out_all(:,:,7))
 
-    cd /Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/fulldata 
+    cd ./full_shape_classification_SRVF_preserving_size/data/fulldata 
     csvwrite(strcat(toothtype,"_train_individual.csv"), train_individual)
     
 
