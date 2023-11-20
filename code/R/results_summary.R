@@ -388,3 +388,70 @@ dev.off()
 
 
 
+
+#Sensitiyive and Specificity
+load("./results/results_rf_tribe.rda")
+load("./results/results_svm_radial_tribe.rda")
+load("./results/results_svm_linear_tribe.rda")
+library(caret)
+res <- data.frame()
+for (proj in c("I", "OV", "I-PC", "OV-PC","EFA")) {print(proj)
+  for (tooth in c("LM1", "LM2", "LM3", "UM1", "UM2", "UM3")) {
+    #Random Forest
+    mat <- results_rf_tribe[[proj]][[tooth]]
+    xtab <- table(mat$pred_class, mat$real_class)
+    cm <- caret::confusionMatrix(xtab)
+    acc <- cm$byClass[,1:2]
+    #log loss
+    res <- rbind(res,data.frame(method = "RF", proj = proj, tooth = tooth, accuracy = acc, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
+    
+    #SVM Linear
+    mat <- results_svm_linear_tribe[[proj]][[tooth]]
+    mat$pred_class <- factor(mat$pred_class, levels = levels(mat$real_class))
+    xtab <- table(mat$pred_class, mat$real_class)
+    cm <- caret::confusionMatrix(xtab)
+    acc <- cm$byClass[,1:2]
+    res <- rbind(res,data.frame(method = "SVM-L", proj = proj, tooth = tooth, accuracy = acc, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
+    
+    
+    #SVM Radial
+    mat <- results_svm_radial_tribe[[proj]][[tooth]]
+    mat$pred_class <- factor(mat$pred_class, levels = levels(mat$real_class))
+    xtab <- table(mat$pred_class, mat$real_class)
+    cm <- caret::confusionMatrix(xtab)
+    acc <- cm$byClass[,1:2]
+    res <- rbind(res,data.frame(method = "SVM-R", proj = proj, tooth = tooth, accuracy = acc, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
+    
+    
+    #XGboost
+    #mat <- results_xg_species_given_tribe[[proj]][[tooth]]
+    #Accuracy
+    #acc <- mean(mat$pred_class == mat$real_class)
+    #log loss
+    #logloss <- mean(-apply(mat, 1, function(x){log(as.numeric(x[x[["real_class"]]]))}))
+    #res <- rbind(res,data.frame(method = "XG", proj = proj, tooth = tooth, accuracy = acc, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "species_given_tribe"))
+    
+    
+  }
+}
+
+res$tribe <- substring(rownames(res),8,nchar(rownames(res)))
+res$tribe <- gsub("[0-9]", "", res$tribe)
+res$proj <- factor(res$proj, levels = c("EFA","I","OV","I-PC","OV-PC"))
+res <- res %>% filter(method != "XG")
+names(res)[4:5] <- c("sens", "spec")
+
+
+
+
+ggplot(aes(x = sens, y = spec, color = tribe, shape = proj), data = res %>% filter(method == "RF")) + geom_point(aes(group = method)) + facet_grid(toothnum ~ toothchar ) +  
+  geom_line(aes(group = method)) + xlab("Feature Generation Method") + ylab("Kappa")
+
+  
+png("./figures/tribe_sens_and_spec_size.png", res = 300, units = "in", h = 5, w = 8)
+library(ggplot2)
+ggplot(aes(x = proj, y = accuracy, colour = method, group = method), data = res) + geom_point(aes(group = method)) + facet_grid(toothnum~toothchar) + 
+  geom_line(aes(group = method)) + xlab("Feature Generation Method") + ylab("Kappa")
+dev.off()
+
+

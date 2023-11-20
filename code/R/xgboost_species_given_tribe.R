@@ -16,7 +16,7 @@ for (proj in c("I","OV","I-PC","OV-PC","EFA")){print(proj)
   for (toothtype in c("LM1","LM2","LM3","UM1","UM2","UM3")){print(toothtype)
     temp_list_tribe <- list()
     temp_list_species <- list()
-    path <- "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/data/"
+    path <- "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/"
     for (i in 1:5){print(i)
       
       if (proj == "EFA"){
@@ -25,25 +25,26 @@ for (proj in c("I","OV","I-PC","OV-PC","EFA")){print(proj)
       }
       
       if (proj == "I"){
-        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_train",i,".csv"), header = FALSE)
-        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_test",i,".csv"), header = FALSE)
+        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_train",i,".csv"), header = TRUE)
+        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_test",i,".csv"), header = TRUE)
       }
       
       if (proj == "OV"){
-        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_train_overall",i,".csv"), header = FALSE)
-        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_test_overall",i,".csv"), header = FALSE)
+        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_train_overall",i,".csv"), header = TRUE)
+        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_test_overall",i,".csv"), header = TRUE)
       }
       
       if (proj == "I-PC"){
-        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtrain",i,".csv"), header = FALSE)
-        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtest",i,".csv"), header = FALSE)
+        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtrain",i,".csv"), header = TRUE)
+        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtest",i,".csv"), header = TRUE)
       }
       
       if (proj == "OV-PC"){
-        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtrain_overall",i,".csv"), header = FALSE)
-        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtest_overall",i,".csv"), header = FALSE)
+        X_train <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtrain_overall",i,".csv"), header = TRUE)
+        X_test <- read.csv(paste0(path,toothtype,"/",toothtype,"fold_PCtest_overall",i,".csv"), header = TRUE)
       }
       
+      path <- "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/"
       y_train <- read.csv(paste0(path,"UpdatedCatsFiles/",toothtype,"/",toothtype,"fold_train_cats",i,".csv"), header = TRUE)
       y_test <-  read.csv(paste0(path,"UpdatedCatsFiles/",toothtype,"/",toothtype,"fold_test_cats",i,".csv"), header = TRUE)
       
@@ -244,13 +245,13 @@ for (proj in c("I","OV","I-PC","OV-PC","EFA")){print(proj)
     #Output is a list with 6 slots (one for each tooth type).
     #In each slot there is the pred class, real class, and then probs for each tribe.
     save(results_xg_tribe, 
-         file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/results/results_xg_tribe.rda")
+         file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/results/results_xg_tribe.rda")
     
     save(results_xg_species, 
-         file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/results/results_xg_species.rda")
+         file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/results/results_xg_species.rda")
     
     save(results_xg_species_given_tribe, 
-         file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/results/results_xg_species_given_tribe.rda")
+         file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/results/results_xg_species_given_tribe.rda")
     
   }
   
@@ -261,17 +262,21 @@ end-start
 #Output is a list with 6 slots (one for each tooth type).
 #In each slot there is the pred class, real class, and then probs for each tribe.
 save(results_xg_tribe, 
-     file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/results/results_xg_tribe.rda")
+     file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/results/results_xg_tribe.rda")
 
 save(results_xg_species, 
-     file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/results/results_xg_species.rda")
+     file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/results/results_xg_species.rda")
 
 save(results_xg_species_given_tribe, 
-     file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF/results/results_xg_species_given_tribe.rda")
+     file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/results/results_xg_species_given_tribe.rda")
 
 
 for (i in 1:6){
-  print(mean(results_svm_radial_species_given_tribe[[i]][,1] == results_svm_radial_species_given_tribe[[i]][,2]))
+  print(mean(results_xg_tribe[["I"]][[i]][,1] == results_xg_tribe[["I"]][[i]][,2]))
+}
+
+for (i in 1:6){
+  print(mean(results_xg_species_given_tribe[["I"]][[i]][,1] == results_xg_species_given_tribe[["I"]][[i]][,2]))
 }
 
 #Accuracy LM1: 0.8195876

@@ -30,8 +30,10 @@ tic
 %I think q2n is the repatameterization and R is the rotation?
 [q2n,R] = Find_Rotation_and_Seed_unique(q1,q2,1); 
 % this scales it appropriately 
-q2n = q2n/sqrt(InnerProd_Q(q2n,q2n));
+%I remove the scaling
+%q2n = q2n/sqrt(InnerProd_Q(q2n,q2n));
 % note sure what this does, maybe project to tangent space?
+%No.  It projects back to the space of closed curves.  
 q2n = ProjectC(q2n);
 % this takes the SRVFs form back to a closed curve (?)
 p2 = q_to_curve(q2);
@@ -41,7 +43,10 @@ p2n = R*p2;
 %toc
 
 % geodesic distance between the curves
-d = acos(InnerProd_Q(q1,q2n));
+%d = acos(InnerProd_Q(q1,q2n));
+
+%Is this it?  
+d = sqrt(InnerProd_Q(q1-q2n,q1-q2n));
 
 %figure 2 is the first curve, with sampled points
 %figure 3 is the second curve, with sampled points 
