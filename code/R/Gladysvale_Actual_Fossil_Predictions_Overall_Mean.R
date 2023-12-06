@@ -3,8 +3,6 @@ library(randomForest)
 library(e1071)
 
 #Predict the gladysvale fossil teeth using overall means  
-
-setwd("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/")
 gladysvale_metadata <- read.csv("./data/Gladysvale_Med_Alcels_Greg.csv", header = FALSE)[,1:3]
 names(gladysvale_metadata) <- c("image","type","broken")
 gladysvale_metadata$I_broken <- 0
@@ -25,7 +23,7 @@ for (toothtype in c("LM1","LM2","LM3","UM1","UM2","UM3")){
   gladysvale_reference <- read.csv("./data/fulldata/gladysvale_reference.csv")
   
   #rs in the full reference file.  Merge on the info that we want.  
-  rs <- read.csv("/Users/gregorymatthews/Dropbox/gladysvale/reference_file_20210622.csv")
+  rs <- read.csv("./gladysvale/reference_file_20210622.csv")
   
   #Train the model
   best <- tune(svm, train.y = y_train$tribe, train.x = X_train ,kernel ="radial", ranges = list(cost=c(0.001,0.01,0.1,0.5,1,2.5,5,10,100)), tunecontrol = tune.control(cross = 3))
@@ -77,18 +75,6 @@ for (toothtype in c("LM1","LM2","LM3","UM1","UM2","UM3")){
   
 }
 
-res <- list()
-for (toothtype in c("LM1","LM2","LM3","UM1","UM2","UM3")){
-  res[[toothtype]] <- read.csv(paste0("./gladysvale_predictions/",toothtype,"_tribe_individual.csv"))
-}
-
-res_df <- do.call(rbind,res)
-table(res_df$type,res_df$pred_class)
-table(res_df$pred_class)
-table(res_df$pred_class == "Alcelaphini")
-
-mean(res_df$Alcelaphini[res_df$pred_class == "Alcelaphini"])
-
 
 
 res <- list()
@@ -98,8 +84,6 @@ for (toothtype in c("LM1","LM2","LM3","UM1","UM2","UM3")){
 res_df <- do.call(rbind,res)
 write.csv(res_df,file = "./gladysvale_predictions/gladysvale_predictions_tribe_overall_master.csv")
 
-table(res_df$type,res_df$pred_class)
-table(res_df$pred_class)
 
 #Species classification
 res_spec <- list()
@@ -109,6 +93,5 @@ for (toothtype in c("LM1","LM2","LM3","UM1","UM2","UM3")){
 res_df_spec <- do.call(rbind,res_spec)
 write.csv(res_df_spec,file = "./gladysvale_predictions/gladysvale_predictions_species_overall_master.csv")
 
-table(res_df_spec$type,res_df_spec$pred_class)
 
 

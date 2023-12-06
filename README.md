@@ -17,6 +17,11 @@ svm_linear_kernel_species_given_tribe.R
 svm_radial_kernel_species_given_tribe.R
 
 Step 4: 
+results_summary.R
+
+Step 5: Data example with Gladysvale teeth
+Gladysvale_Actual_Fossil_Prediction.R
+Gladysvale_Actual_Fossil_Prediction_Overall_Mean.R
 
 
 
