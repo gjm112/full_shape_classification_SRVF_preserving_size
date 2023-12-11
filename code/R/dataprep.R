@@ -5,9 +5,6 @@ library(dplyr)
 library(Momocs)
 library(fdasrvf)
 
-#source("./gladysvale/R/utility.R")
-#source("./gladysvale/R/curve_functions.R")
-
 #####################################################################################
 ##What does this code do? 
 ## 1. Connects to the database and gets the reference file.  
@@ -25,11 +22,8 @@ rs <- dbGetQuery(mydb, q)
 load("./data/rs_20210622.RData")
 
 #Remove Tribe == "xtribe" 
-#These are just example rows in the data base
-#rs <- subset(rs, tribe != "xtribe")
-#qntkhvn
-
 rs <- rs %>% filter(tribe != "xtribe")
+
 
 
 

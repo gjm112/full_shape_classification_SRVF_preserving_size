@@ -5,10 +5,10 @@ library(dplyr)
 library(Momocs)
 library(fdasrvf)
 
-source("/Users/gregorymatthews/Dropbox/gladysvale/R/utility.R")
-source("/Users/gregorymatthews/Dropbox/gladysvale/R/curve_functions.R")
+source("/gladysvale/R/utility.R")
+source("./gladysvale/R/curve_functions.R")
 
-load("/Users/gregorymatthews/Dropbox/gladysvale/RData/teeth_BW_train_20210622.RData")
+load("./gladysvale/RData/teeth_BW_train_20210622.RData")
 
 make_same_num_points <- function(x, N = 500){
   out <- resamplecurve(t(x),N)
@@ -47,7 +47,7 @@ for (alpha in c(0, .25, .5, .75, 1)) {
 names(stack) <- c("x","y")
 stack$alpha <- rep(c(0, .25, .5, .75, 1), each = 500)
 
-png("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/deformations_EFA_for_paper.png", res = 300, h = 3, w = 15, units = "in")
+png("./full_shape_classification_SRVF_preserving_size/deformations_EFA_for_paper.png", res = 300, h = 3, w = 15, units = "in")
 ggplot(aes(x = x, y = y), data = stack) + 
   geom_path() + 
   facet_grid( ~ factor(alpha)) + 
@@ -71,15 +71,15 @@ dev.off()
 qX <- curve_to_q(teeth_BW_train_500[[1]])
 qY <- curve_to_q(teeth_BW_train_500[[100]])
 
-write.csv(qX,file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/qX.csv",row.names = FALSE)
-write.csv(qY,file = "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/qY.csv",row.names = FALSE)
+write.csv(qX,file = "./full_shape_classification_SRVF_preserving_size/qX.csv",row.names = FALSE)
+write.csv(qY,file = "./full_shape_classification_SRVF_preserving_size/qY.csv",row.names = FALSE)
 
 #Register in matlab
 #Find rotation and seed unique.m
 #Run alignment_for_paper_deformation_plots.m
 #Used to align the curves with reparameterization.  
 
-qY_registered <- read.csv("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/qY_registered.csv", header = FALSE)
+qY_registered <- read.csv("./full_shape_classification_SRVF_preserving_size/qY_registered.csv", header = FALSE)
 
 qX <- t(qX)
 qY_registered <- t(qY_registered)
@@ -95,7 +95,7 @@ for (alpha in c(0, .25, .5, .75, 1)) {
 names(stack) <- c("x","y")
 stack$alpha <- rep(c(0, .25, .5, .75, 1), each = 500)
 
-png("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/deformations_elastic_for_paper.png", res = 300, h = 3, w = 15, units = "in")
+png("./full_shape_classification_SRVF_preserving_size/deformations_elastic_for_paper.png", res = 300, h = 3, w = 15, units = "in")
 ggplot(aes(x = x, y = y), data = stack) + 
   geom_path() + 
   # geom_point(aes(x = x, y = y),data = stack[c(0,500,1000,1500,2000) + 50,

@@ -6,7 +6,7 @@ for (tooth in c("LM1", "LM2", "LM3", "UM1", "UM2", "UM3")) {print(tooth)
   folds_ref <-
     read.csv(
       paste0(
-        "/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/folds/",
+        "./full_shape_classification_SRVF_preserving_size/data/folds/",
         tooth,
         "ref_folds.csv"
       )
@@ -14,9 +14,9 @@ for (tooth in c("LM1", "LM2", "LM3", "UM1", "UM2", "UM3")) {print(tooth)
 
   for (fold in 1:5) {print(fold)  
   
-  file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/UpdatedCatsFiles/",tooth,"/",tooth,"fold_train_cats",fold,".csv")
+  file = paste0("./full_shape_classification_SRVF_preserving_size/data/UpdatedCatsFiles/",tooth,"/",tooth,"fold_train_cats",fold,".csv")
   write.csv(ref[ref$image %in% folds_ref$image[folds_ref$folds_tribe != fold],c("tribe","species")],file = file)    
-  file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/UpdatedCatsFiles/",tooth,"/",tooth,"fold_test_cats",fold,".csv")
+  file = paste0("./full_shape_classification_SRVF_preserving_size/data/UpdatedCatsFiles/",tooth,"/",tooth,"fold_test_cats",fold,".csv")
   write.csv(ref[ref$image %in% folds_ref$image[folds_ref$folds_tribe == fold],c("tribe","species")],file = file)    
 
   
@@ -33,18 +33,18 @@ for (proj in c("I","OV","I-PC","OV-PC")){print(proj)
   
   
     #Test
-    if (proj == "I"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_test",fold,".csv")}
-    if (proj == "OV"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_test_overall",fold,".csv")}
-    if (proj == "I-PC"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtest",fold,".csv")}
-    if (proj == "OV-PC"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtest_overall",fold,".csv")}
+    if (proj == "I"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_test",fold,".csv")}
+    if (proj == "OV"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_test_overall",fold,".csv")}
+    if (proj == "I-PC"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtest",fold,".csv")}
+    if (proj == "OV-PC"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtest_overall",fold,".csv")}
     
     write.csv(temp[ref$image %in% folds_ref$image[folds_ref$folds_tribe == fold],],file = file)
     
     #Train
-    if (proj == "I"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_train",fold,".csv")}
-    if (proj == "OV"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_train_overall",fold,".csv")}
-    if (proj == "I-PC"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtrain",fold,".csv")}
-    if (proj == "OV-PC"){file = paste0("/Users/gregorymatthews/Dropbox/full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtrain_overall",fold,".csv")}
+    if (proj == "I"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_train",fold,".csv")}
+    if (proj == "OV"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_train_overall",fold,".csv")}
+    if (proj == "I-PC"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtrain",fold,".csv")}
+    if (proj == "OV-PC"){file = paste0("./full_shape_classification_SRVF_preserving_size/data/",tooth,"/",tooth,"fold_PCtrain_overall",fold,".csv")}
     
     write.csv(temp[ref$image %in% folds_ref$image[folds_ref$folds_tribe != fold],],file = file)    
     
