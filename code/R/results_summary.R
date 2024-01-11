@@ -1,10 +1,10 @@
 ####################################
 #Species given Tribe results
 ####################################
-
-load("./results/results_rf_species_given_tribe_with_size.rda")
-load("./results/results_svm_radial_species_given_tribe_with_size.rda")
-load("./results/results_svm_linear_species_given_tribe_with_size.rda")
+library(tidyverse)
+load("./results/results_rf_species_given_tribe.rda")
+load("./results/results_svm_radial_species_given_tribe.rda")
+load("./results/results_svm_linear_species_given_tribe.rda")
 
 #names(results_rf_species_given_tribe[["I"]][["LM1"]])
 
@@ -125,11 +125,10 @@ dev.off()
 ####################################
 #Tribe results
 ####################################
-
 load("./results/results_rf_tribe.rda")
 load("./results/results_svm_radial_tribe.rda")
 load("./results/results_svm_linear_tribe.rda")
-#load("./results/results_xg_tribe.rda")
+
 
 res <- data.frame()
 for (proj in c("I", "OV", "I-PC", "OV-PC","EFA")) {print(proj)
@@ -190,17 +189,17 @@ for (proj in c("I", "OV", "I-PC", "OV-PC","EFA")) {print(proj)
     mat <- results_rf_tribe[[proj]][[tooth]]
     xtab <- table(mat$pred_class, mat$real_class)
     cm <- caret::confusionMatrix(xtab)
-    acc <- cm$overall["Kappa"]
+    kappa <- cm$overall["Kappa"]
     #log loss
-    res <- rbind(res,data.frame(method = "RF", proj = proj, tooth = tooth, accuracy = acc, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
+    res <- rbind(res,data.frame(method = "RF", proj = proj, tooth = tooth, kappa = kappa, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
     
     #SVM Linear
     mat <- results_svm_linear_tribe[[proj]][[tooth]]
     mat$pred_class <- factor(mat$pred_class, levels = levels(mat$real_class))
     xtab <- table(mat$pred_class, mat$real_class)
     cm <- caret::confusionMatrix(xtab)
-    acc <- cm$overall["Kappa"]
-    res <- rbind(res,data.frame(method = "SVM-L", proj = proj, tooth = tooth, accuracy = acc, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
+    kappa <- cm$overall["Kappa"]
+    res <- rbind(res,data.frame(method = "SVM-L", proj = proj, tooth = tooth, kappa = kappa, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
     
     
     #SVM Radial
@@ -208,8 +207,8 @@ for (proj in c("I", "OV", "I-PC", "OV-PC","EFA")) {print(proj)
     mat$pred_class <- factor(mat$pred_class, levels = levels(mat$real_class))
     xtab <- table(mat$pred_class, mat$real_class)
     cm <- caret::confusionMatrix(xtab)
-    acc <- cm$overall["Kappa"]
-    res <- rbind(res,data.frame(method = "SVM-R", proj = proj, tooth = tooth, accuracy = acc, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
+    kappa <- cm$overall["Kappa"]
+    res <- rbind(res,data.frame(method = "SVM-R", proj = proj, tooth = tooth, kappa = kappa, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "tribe"))
   
     
     
@@ -221,17 +220,18 @@ res <- res %>% filter(method != "XG")
 
 png("./figures/tribe_kappa_size.png", res = 300, units = "in", h = 5, w = 8)
 library(ggplot2)
-ggplot(aes(x = proj, y = accuracy, colour = method, group = method), data = res) + geom_point(aes(group = method)) + facet_grid(toothnum~toothchar) + 
+ggplot(aes(x = proj, y = kappa, colour = method, group = method), data = res) + geom_point(aes(group = method)) + facet_grid(toothnum~toothchar) + 
   geom_line(aes(group = method)) + xlab("Feature Generation Method") + ylab("Kappa")
 dev.off()
 
 ########################################################################
-#Other accuracy stats. Species given tribe
+#Cohens Kappa. Species given tribe
 ########################################################################
-load("./results/results_rf_species_given_tribe_with_size.rda")
-load("./results/results_svm_radial_species_given_tribe_with_size.rda")
-load("./results/results_svm_linear_species_given_tribe_with_size.rda")
+load("./results/results_rf_species_given_tribe.rda")
+load("./results/results_svm_radial_species_given_tribe.rda")
+load("./results/results_svm_linear_species_given_tribe.rda")
 library(caret)
+logloss <- NA
 res <- data.frame()
 for (proj in c("I", "OV", "I-PC", "OV-PC","EFA")) {print(proj)
   for (tooth in c("LM1", "LM2", "LM3", "UM1", "UM2", "UM3")) {
@@ -239,24 +239,24 @@ for (proj in c("I", "OV", "I-PC", "OV-PC","EFA")) {print(proj)
     mat <- results_rf_species_given_tribe[[proj]][[tooth]]
     xtab <- table(mat$pred_class, mat$real_class)
     cm <- caret::confusionMatrix(xtab)
-    acc <- cm$overall["Kappa"]
+    kappa <- cm$overall["Kappa"]
     #log loss
-    res <- rbind(res,data.frame(method = "RF", proj = proj, tooth = tooth, accuracy = acc, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "species_given_tribe"))
+    res <- rbind(res,data.frame(method = "RF", proj = proj, tooth = tooth, kappa = kappa, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "species_given_tribe"))
     
     #SVM Linear
     mat <- results_svm_linear_species_given_tribe[[proj]][[tooth]]
     xtab <- table(mat$pred_class, mat$real_class)
     cm <- caret::confusionMatrix(xtab)
-    acc <- cm$overall["Kappa"]
-    res <- rbind(res,data.frame(method = "SVM-L", proj = proj, tooth = tooth, accuracy = acc, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "species_given_tribe"))
+    kappa <- cm$overall["Kappa"]
+    res <- rbind(res,data.frame(method = "SVM-L", proj = proj, tooth = tooth, kappa = kappa, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "species_given_tribe"))
     
     
     #SVM Radial
     mat <- results_svm_radial_species_given_tribe[[proj]][[tooth]]
     xtab <- table(mat$pred_class, mat$real_class)
     cm <- caret::confusionMatrix(xtab)
-    acc <- cm$overall["Kappa"]
-    res <- rbind(res,data.frame(method = "SVM-R", proj = proj, tooth = tooth, accuracy = acc, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "species_given_tribe"))
+    kappa <- cm$overall["Kappa"]
+    res <- rbind(res,data.frame(method = "SVM-R", proj = proj, tooth = tooth, kappa = kappa, logloss = logloss, toothchar = substring(tooth,1,2), toothnum = substring(tooth,3,3), model = "species_given_tribe"))
 
     
   }
@@ -267,7 +267,7 @@ res <- res %>% filter(method != "XG")
 
 png("./figures/species_given_tribe_kappa_size.png", res = 300, units = "in", h = 5, w = 8)
 library(ggplot2)
-ggplot(aes(x = proj, y = accuracy, colour = method, group = method), data = res) + geom_point(aes(group = method)) + facet_grid(toothnum~toothchar) + 
+ggplot(aes(x = proj, y = kappa, colour = method, group = method), data = res) + geom_point(aes(group = method)) + facet_grid(toothnum~toothchar) + 
   geom_line(aes(group = method)) + xlab("Feature Generation Method") + ylab("Kappa")
 dev.off()
 
